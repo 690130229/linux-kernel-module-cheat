@@ -56,6 +56,7 @@ consts['kernel_modules_subdir'] = 'kernel_modules'
 consts['kernel_modules_source_dir'] = os.path.join(consts['root_dir'], consts['kernel_modules_subdir'])
 consts['userland_subdir'] = 'userland'
 consts['userland_source_dir'] = os.path.join(consts['root_dir'], consts['userland_subdir'])
+consts['userland_source_arch_dir'] = os.path.join(consts['userland_source_dir'], 'arch')
 consts['userland_build_ext'] = '.out'
 consts['include_subdir'] = 'include'
 consts['include_source_dir'] = os.path.join(consts['root_dir'], consts['include_subdir'])
@@ -714,12 +715,15 @@ Valid emulators: {}
             env['initarg'] = 'init'
         env['quit_init'] = '{}={}'.format(env['initarg'], env['userland_quit_cmd'])
 
+        # Userland
+        env['userland_source_arch_arch_dir'] = join(env['userland_source_arch_dir'], env['arch'])
+        env['userland_build_dir'] = join(env['out_dir'], 'userland', env['userland_build_id'], env['arch'])
+
         # Kernel modules.
         env['kernel_modules_build_dir'] = join(env['kernel_modules_build_base_dir'], env['arch'])
         env['kernel_modules_build_subdir'] = join(env['kernel_modules_build_dir'], env['kernel_modules_subdir'])
         env['kernel_modules_build_host_dir'] = join(env['kernel_modules_build_base_dir'], 'host')
         env['kernel_modules_build_host_subdir'] = join(env['kernel_modules_build_host_dir'], env['kernel_modules_subdir'])
-        env['userland_build_dir'] = join(env['out_dir'], 'userland', env['userland_build_id'], env['arch'])
         env['out_rootfs_overlay_dir'] = join(env['out_dir'], 'rootfs_overlay', env['arch'])
         env['out_rootfs_overlay_bin_dir'] = join(env['out_rootfs_overlay_dir'], 'bin')
 
@@ -1267,7 +1271,7 @@ TODO: not yet implemented on all scripts.
         if not os.path.exists(dst):
             return True
         for src in srcs:
-            if os.path.getmtime(src) > os.path.getmtime(dst):
+            if os.path.getmtime(src) >= os.path.getmtime(dst):
                 return True
         return False
 

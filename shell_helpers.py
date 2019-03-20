@@ -126,12 +126,12 @@ class ShellHelpers:
             src = os.path.join(srcdir, basename)
             if os.path.isfile(src):
                 noext, ext = os.path.splitext(basename)
-                if filter_ext is not None and ext == filter_ext:
-                    distutils.file_util.copy_file(
-                        src,
-                        os.path.join(destdir, basename),
-                        update=1,
-                    )
+                dest = os.path.join(destdir, basename)
+                if (
+                    (filter_ext is not None and ext == filter_ext) and
+                    (os.path.exists(dest) and os.path.getmtime(src) >= os.path.getmtime(dest))
+                ):
+                    self.cp(src, dest)
 
     def copy_dir_if_update(self, srcdir, destdir, filter_ext=None):
         self.copy_dir_if_update_non_recursive(srcdir, destdir, filter_ext)

@@ -4,6 +4,6 @@
 #include <stdlib.h>
 
 int main(void) {
-	puts("hello");
+	puts("hello4");
 	return EXIT_SUCCESS;
 }
